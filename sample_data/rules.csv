@@ -1,0 +1,9 @@
+rule_id,service,severity,title,description
+AWS-001,EC2,High,Security groups allow 0.0.0.0/0 on non-HTTP(S) ports,"Detects SG rules exposing non-web ports to the internet."
+AWS-002,S3,High,S3 bucket public read/write,"Flags buckets with public ACL/Policy when block-public-access is expected."
+AWS-003,CloudTrail,Medium,CloudTrail not enabled in all regions,"Ensures org/account has at least one org/region trail."
+AWS-004,IAM,High,Root account without MFA,"Critical misconfig of the root user."
+AWS-005,KMS,Medium,CMK rotation disabled,"Customer-managed KMS keys should enable rotation."
+AWS-006,RDS,High,RDS instance publicly accessible,"Detects public RDS endpoints unless explicitly allowed."
+AWS-007,CloudWatch,Low,Log group retention is 'Never expire',"'Forever' retention increases risk; set finite retention."
+AWS-008,EBS,Medium,Unencrypted EBS volumes,"EBS volumes should use encryption by default."

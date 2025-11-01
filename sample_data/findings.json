@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "rule_key": "Open_Ports_001",
+    "cloud": "AWS",
+    "account_id": "111111111111",
+    "resource_id": "sg-0abc123",
+    "region": "eu-north-1",
+    "severity": "High",
+    "title": "Security group allows 0.0.0.0/0 on port 22",
+    "message": "The security group contains inbound or outbound rules that allow unrestricted access (0.0.0.0/0 or ::/0). This exposes your instances to the public internet and increases attack surface.",
+    "evidence": {"cidr": "0.0.0.0/0", "port": 22, "protocol": "tcp"},
+    "first_seen": "2025-10-25T10:01:02Z",
+    "last_seen": "2025-10-25T10:01:02Z",
+    "status": "OPEN"
+  },
+  {
+    "id": 2,
+    "rule_key": "Root_MFA_Disabled_001",
+    "cloud": "AWS",
+    "account_id": "222222222222",
+    "resource_id": "root",
+    "region": "us-east-1",
+    "severity": "High",
+    "title": "Root account without MFA",
+    "message": "The AWS account root user does not have Multi-Factor Authentication (MFA) enabled, leaving the account at high risk of compromise.",
+    "evidence": {"mfa_enabled": false},
+    "first_seen": "2025-10-26T10:02:45Z",
+    "last_seen": "2025-10-26T10:02:45Z",
+    "status": "RESOLVED"
+  }
+]

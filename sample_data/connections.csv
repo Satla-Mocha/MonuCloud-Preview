@@ -1,0 +1,3 @@
+id,cloud,account_id,role_arn,external_id
+1,AWS,111111111111,arn:aws:iam::111111111111:role/MonuCloudReadOnly,EXTERNAL_ID_DEV
+2,AWS,222222222222,arn:aws:iam::222222222222:role/MonuCloudReadOnly,EXTERNAL_ID_PROD
