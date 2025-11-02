@@ -31,7 +31,47 @@ Key Features:
 Architecture (High-level):
 MonuCloud consists of a lightweight Flask web app for the UI and API, a Celery worker for scheduled and on-demand scans, and a PostgreSQL database for users, connected AWS accounts, scans, resources, and findings (plus daily snapshots for charts). The web app handles auth and multi-tenant scoping, then enqueues scan jobs; the worker assumes a read-only cross-account IAM role in each connected account using STS AssumeRole with External ID, calls the relevant AWS service APIs (e.g., EC2, S3, IAM), evaluates rules, and upserts findings into Postgres idempotently. A small rules catalog defines severities/titles, while the worker streams evidence per resource and updates time-series counts. By default, everything runs in Docker; Celery can use Redis or RabbitMQ as the broker. The hosted demo enables a safe “demo mode” that loads sample data without touching real tenants.
 
-[Architecture Diagram](docs/monucloud-arch.mmd)
+Architecture Diagram:
+```mermaid
+flowchart TD
+    subgraph User
+      B[Browser\n(Flask UI)]
+    end
+
+    B -->|HTTP/HTTPS| A[Flask API server\n(app.py)]
+    A -->|enqueue| Q[(Celery Broker\nRedis/RabbitMQ)]
+    W[Celery Worker\n(tasks: run scans)] -->|consume| Q
+    W -->|boto3 STS AssumeRole\n(External ID)| C[(AWS APIs)]
+    A -->|read/write| D[(PostgreSQL)]
+    W -->|read/write| D
+
+    subgraph AWS
+      C
+    end
+
+    classDef svc fill:#eef,stroke:#88a;
+    class A,W,D,Q,C svc;
+
+sequenceDiagram
+    participant UI as UI
+    participant API as Flask API
+    participant DB as Postgres
+    participant W as Celery Worker
+    participant AWS as AWS STS + Services
+
+    UI->>API: POST /api/scans {account:"ALL"}
+    API->>DB: insert scan rows (per account)
+    API->>W: send tasks (job_id, account_id)
+    loop for each account
+      W->>DB: fetch role_arn, external_id
+      W->>AWS: sts:AssumeRole(RoleArn, ExternalId)
+      W->>AWS: call service APIs (EC2/S3/IAM/...)
+      W->>DB: upsert findings, resources
+    end
+    UI->>API: GET /api/findings?account=...
+    API->>DB: query findings with filters
+    API-->>UI: JSON -> charts/table
+```mermaid
 
 Screenshots / Demo:
 - “Connect AWS” screen:
