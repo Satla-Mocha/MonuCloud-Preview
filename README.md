@@ -13,9 +13,8 @@ What you'll find here:
 
 > For a walkthrough or a technical deep dive, DM me.
 
-Live demo
- · [Public preview repo](https://github.com/Satla-Mocha/MonuCloud-Preview)
- · [Contact](omeragniho23@gmail.com)
+[Live demo](https://monucloud.com)
+[Public preview repo](https://github.com/Satla-Mocha/MonuCloud-Preview)
 
 Overview:
 MonuCloud is a lightweight Cloud Security Posture Management (CSPM) project that helps teams continuously scan their cloud accounts, surface misconfigurations, and track fixes over time. It’s designed for DevOps/Cloud engineers and security-minded builders who want a clear, shippable baseline: scheduled scans, findings with evidence, and remediation guidance in a clean UI. The MVP focuses on AWS today, with Azure and GCP checks on the roadmap next.
