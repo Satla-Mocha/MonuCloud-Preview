@@ -1,32 +1,18 @@
 flowchart TD
-  %% NODES
-  B[Browser<br/>(Flask UI)]
-  A[Flask API server<br/>(app.py)]
-  Q[(Celery Broker<br/>Redis/RabbitMQ)]
-  W[Celery Worker<br/>(scan tasks)]
+  B[Browser (Flask UI)]
+  A[Flask API server (app.py)]
+  Q[(Celery Broker)]
+  W[Celery Worker (scan tasks)]
   D[(PostgreSQL)]
   C[(AWS APIs)]
 
-  %% SUBGRAPHS
-  subgraph User
-    B
-  end
-
-  subgraph AWS
-    C
-  end
-
-  %% EDGES
   B -->|HTTP/HTTPS| A
   A -->|enqueue| Q
   W -->|consume| Q
-  W -->|STS AssumeRole<br/>(External ID)| C
+  W -->|STS AssumeRole (External ID)| C
   A -->|read/write| D
   W -->|read/write| D
 
-  %% OPTIONAL STYLING
-  classDef svc fill:#eef,stroke:#88a,stroke-width:1px;
-  class A,W,D,Q,C svc;
 
 sequenceDiagram
   participant UI as UI
