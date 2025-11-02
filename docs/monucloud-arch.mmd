@@ -1,17 +1,18 @@
 flowchart TD
-  B[Browser (Flask UI)]
-  A[Flask API server (app.py)]
+  B[Browser &#40;Flask UI&#41;]
+  A[Flask API server &#40;app.py&#41;]
   Q[(Celery Broker)]
-  W[Celery Worker (scan tasks)]
+  W[Celery Worker &#40;scan tasks&#41;]
   D[(PostgreSQL)]
   C[(AWS APIs)]
 
   B -->|HTTP/HTTPS| A
   A -->|enqueue| Q
   W -->|consume| Q
-  W -->|STS AssumeRole (External ID)| C
+  W -->|STS AssumeRole &#40;External ID&#41;| C
   A -->|read/write| D
   W -->|read/write| D
+
 
 
 sequenceDiagram
