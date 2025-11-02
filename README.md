@@ -34,43 +34,38 @@ MonuCloud consists of a lightweight Flask web app for the UI and API, a Celery w
 Architecture Diagram:
 ```mermaid
 flowchart TD
-    subgraph User
-      B[Browser\n(Flask UI)]
-    end
+  B[Browser / Flask UI]
+  A[Flask API server / app.py]
+  Q[(Celery Broker)]
+  W[Celery Worker / scan tasks]
+  D[(PostgreSQL)]
+  C[(AWS APIs)]
 
-    B -->|HTTP/HTTPS| A[Flask API server\n(app.py)]
-    A -->|enqueue| Q[(Celery Broker\nRedis/RabbitMQ)]
-    W[Celery Worker\n(tasks: run scans)] -->|consume| Q
-    W -->|boto3 STS AssumeRole\n(External ID)| C[(AWS APIs)]
-    A -->|read/write| D[(PostgreSQL)]
-    W -->|read/write| D
-
-    subgraph AWS
-      C
-    end
-
-    classDef svc fill:#eef,stroke:#88a;
-    class A,W,D,Q,C svc;
+  B -->|HTTP/HTTPS| A
+  A -->|enqueue| Q
+  W -->|consume| Q
+  W -->|STS AssumeRole / External ID| C
+  A -->|read/write| D
+  W -->|read/write| D
 
 sequenceDiagram
-    participant UI as UI
-    participant API as Flask API
-    participant DB as Postgres
-    participant W as Celery Worker
-    participant AWS as AWS STS + Services
+  participant U as UI
+  participant A as API
+  participant D as Postgres
+  participant W as Celery Worker
+  participant S as AWS STS + Services
 
-    UI->>API: POST /api/scans {account:"ALL"}
-    API->>DB: insert scan rows (per account)
-    API->>W: send tasks (job_id, account_id)
-    loop for each account
-      W->>DB: fetch role_arn, external_id
-      W->>AWS: sts:AssumeRole(RoleArn, ExternalId)
-      W->>AWS: call service APIs (EC2/S3/IAM/...)
-      W->>DB: upsert findings, resources
-    end
-    UI->>API: GET /api/findings?account=...
-    API->>DB: query findings with filters
-    API-->>UI: JSON -> charts/table
+  U->>A: POST /api/scans {account:"ALL"}
+  A->>D: insert scan rows (per account)
+  A->>W: enqueue tasks (job_id, account_id)
+  loop for each account
+    W->>S: STS AssumeRole (RoleArn, External Id)
+    W->>S: Call service APIs (EC2/S3/IAM)
+    W->>D: Upsert findings & resources
+  end
+  U->>A: GET /api/findings?account=...
+  A->>D: query findings with filters
+  A-->>U: JSON -> charts/table
 ```mermaid
 
 Screenshots / Demo:
