@@ -1,4 +1,4 @@
-MonuCloud — Cloud Security Posture Management (Preview)
+MonuCloud — Cloud Security Posture Management (Preview) ![CI](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Satla-Mocha/MonuCloud-Preview/main/badges/status.json&cacheSeconds=300)
 
 _Lightweight CSPM with a React (Vite) SPA frontend, scheduled scans, External ID onboarding, and clear remediation guidance._
 
